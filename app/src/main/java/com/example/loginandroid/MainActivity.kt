@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
@@ -48,8 +47,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// ---------------------------------------------------------------------
-
 @Composable
 fun AuthScreenContainer(modifier: Modifier = Modifier) {
     var currentScreen by remember { mutableStateOf<AuthScreen>(AuthScreen.Login) }
@@ -64,13 +61,12 @@ fun AuthScreenContainer(modifier: Modifier = Modifier) {
 }
 
 // ---------------------------------------------------------------------
-// 1. PANTALLA DE LOGIN
-// El campo "Usuario" ahora acepta (visualmente) Nombre de Usuario o Correo
+// 1. PANTALLA DE LOGIN (Campo de entrada para el Nombre de Usuario)
 // ---------------------------------------------------------------------
 
 @Composable
 fun LoginScreenVisual(navigateTo: (AuthScreen) -> Unit) {
-    var loginInput by remember { mutableStateOf("") } // Usado para Username o Email
+    var username by remember { mutableStateOf("") } // Ahora solo espera el Nombre de Usuario
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -82,6 +78,8 @@ fun LoginScreenVisual(navigateTo: (AuthScreen) -> Unit) {
     ) {
 
         Spacer(modifier = Modifier.height(32.dp))
+
+
         Icon(
             imageVector = Icons.Filled.Person,
             contentDescription = "Login Icon",
@@ -97,11 +95,11 @@ fun LoginScreenVisual(navigateTo: (AuthScreen) -> Unit) {
                 .padding(bottom = 24.dp),
             color = MaterialTheme.colorScheme.onSurface)
 
-        // Campo para Nombre de Usuario o Correo
+        // Campo para Nombre de Usuario
         OutlinedTextField(
-            value = loginInput,
-            onValueChange = { loginInput = it },
-            label = { Text("Usuario o Correo") },
+            value = username,
+            onValueChange = { username = it },
+            label = { Text("Nombre de Usuario") }, // Etiqueta ajustada
             leadingIcon = { Icon(Icons.Filled.Person, contentDescription = "Icono de Usuario") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -128,7 +126,8 @@ fun LoginScreenVisual(navigateTo: (AuthScreen) -> Unit) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Button(onClick = { /* Lógica de Login (Visual) */ },
+        Button(
+            onClick = { /* Lógica de Login (Visual) */ },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
@@ -151,14 +150,12 @@ fun LoginScreenVisual(navigateTo: (AuthScreen) -> Unit) {
 }
 
 // ---------------------------------------------------------------------
-// 2. PANTALLA DE REGISTRO
-// Se añade el nuevo campo 'username'
+// 2. PANTALLA DE REGISTRO (Campo de Correo Electrónico ELIMINADO)
 // ---------------------------------------------------------------------
 
 @Composable
 fun RegisterScreenVisual(navigateTo: (AuthScreen) -> Unit) {
-    var email by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") } // <-- NUEVO CAMPO
+    var username by remember { mutableStateOf("") } // Único campo de identificación
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -173,8 +170,9 @@ fun RegisterScreenVisual(navigateTo: (AuthScreen) -> Unit) {
 
         Spacer(modifier = Modifier.height(32.dp))
 
+
         Icon(
-            imageVector = Icons.Filled.Email,
+            imageVector = Icons.Filled.Person,
             contentDescription = "Register Icon",
             modifier = Modifier
                 .padding(vertical = 16.dp)
@@ -184,24 +182,14 @@ fun RegisterScreenVisual(navigateTo: (AuthScreen) -> Unit) {
             text = "REGISTRARSE",
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(bottom = 24.dp),
+            modifier = Modifier.padding(bottom = 24.dp),
             color = MaterialTheme.colorScheme.onSurface)
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Correo Electrónico") },
-            leadingIcon = { Icon(Icons.Filled.Email, contentDescription = "Icono de Correo") },
-            modifier = Modifier.fillMaxWidth())
-
-        Spacer(modifier = Modifier.height(16.dp))
 
         // Campo Nombre de Usuario
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
-            label = { Text("Nombre de Usuario") }, // <-- Etiqueta para el nuevo campo
+            label = { Text("Nombre de Usuario") },
             leadingIcon = { Icon(Icons.Filled.Person, contentDescription = "Icono de Usuario") },
             modifier = Modifier.fillMaxWidth()
         )
