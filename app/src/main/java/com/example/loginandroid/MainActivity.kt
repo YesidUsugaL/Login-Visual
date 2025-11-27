@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.loginandroid.ui.theme.LoginAndroidTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 // --- Definición del Estado de la Pantalla ---
 sealed class AuthScreen {
@@ -65,7 +66,7 @@ fun AuthScreenContainer(modifier: Modifier = Modifier) {
 // ---------------------------------------------------------------------
 
 @Composable
-fun LoginScreenVisual(navigateTo: (AuthScreen) -> Unit) {
+fun LoginScreenVisual(navigateTo: (AuthScreen) -> Unit, viewModel: AuthViewModel = viewModel()) {
     var username by remember { mutableStateOf("") } // Ahora solo espera el Nombre de Usuario
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -127,13 +128,22 @@ fun LoginScreenVisual(navigateTo: (AuthScreen) -> Unit) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { /* Lógica de Login (Visual) */ },
+            onClick = { viewModel.login(username, password) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
             shape = RoundedCornerShape(8.dp)) {
             Text("ACCEDER", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
         }
+
+        viewModel.loginResult?.let {
+            Text("Bienvenido ${it.name}", color = MaterialTheme.colorScheme.primary)
+        }
+
+        viewModel.errorMessage?.let {
+            Text("Error: $it", color = MaterialTheme.colorScheme.error)
+        }
+
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -154,7 +164,7 @@ fun LoginScreenVisual(navigateTo: (AuthScreen) -> Unit) {
 // ---------------------------------------------------------------------
 
 @Composable
-fun RegisterScreenVisual(navigateTo: (AuthScreen) -> Unit) {
+fun RegisterScreenVisual(navigateTo: (AuthScreen) -> Unit, viewModel: AuthViewModel = viewModel()) {
     var username by remember { mutableStateOf("") } // Único campo de identificación
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -233,12 +243,20 @@ fun RegisterScreenVisual(navigateTo: (AuthScreen) -> Unit) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { /* Lógica de Registro (Visual) */ },
+            onClick = { viewModel.register(username, password) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
             shape = RoundedCornerShape(8.dp)) {
             Text("CREAR CUENTA", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+        }
+
+        viewModel.loginResult?.let {
+            Text("Bienvenido ${it.name}", color = MaterialTheme.colorScheme.primary)
+        }
+
+        viewModel.errorMessage?.let {
+            Text("Error: $it", color = MaterialTheme.colorScheme.error)
         }
 
         Spacer(modifier = Modifier.height(32.dp))
